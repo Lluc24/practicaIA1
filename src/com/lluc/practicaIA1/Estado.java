@@ -62,7 +62,7 @@ public class Estado {
         return -coste;
     }
 
-    public double heuristicoCoseFelicidad() {
+    public double heuristicoCosteFelicidad() {
         return felicidad - coste;
     }
 
