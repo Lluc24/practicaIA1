@@ -59,11 +59,11 @@ public class Estado {
     }
 
     public double heuristicoCoste() {
-        return coste;
+        return -coste;
     }
 
     public double heuristicoCoseFelicidad() {
-        return felicidad + coste;
+        return felicidad - coste;
     }
 
     public void imprimir(Paquetes paquetes, Transporte transporte) {
