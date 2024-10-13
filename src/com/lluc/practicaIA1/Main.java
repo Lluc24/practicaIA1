@@ -26,6 +26,7 @@ public class Main {
             }
         });
         Estado inicial = new Estado(paquetes, transporte);
+        // Seleccionar uno
         azamonHillClimbingSearch(inicial);
         azamonSimulatedAnnealingSearch(inicial);
     }
