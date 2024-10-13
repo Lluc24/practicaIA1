@@ -243,8 +243,25 @@ public class Estado {
     	return true;
     }
 
-    
+    //IMPRIMIR COMO TABLA
+    public void imprimir_tabla(Paquetes paquetes, Transporte transporte) {
+        for (int i = 0; i < vecOfertas.length; ++i) {
+            double peso_acumulado = 0.00;
+            System.out.println("---------------------------------------------------------------------------------------------------------");
+            System.out.print("| Oferta: " + i + ", Peso_acumulado(" + peso_acumulado + "kg) |");
+            //System.out.println(transporte.get(i).toString());
+            for (int j = 0; j < vecPaquetes.length; ++j) {
+                if (vecPaquetes[j] == i) {
+                    peso_acumulado += paquetes.get(j).getPeso();
+                    System.out.print(" Paquete: " + j + "Peso(" + paquetes.get(j).getPeso() + "kg), Peso_acumulado(" + peso_acumulado + "kg) |");
+                    //System.out.println(paquetes.get(j).toString());
+                }
+            }
+            System.out.print(" Peso libre " + vecOfertas[i] + "kg |");
+        }
+    }
 
+	//IMPRIMIR ORIGINAL
     public void imprimir(Paquetes paquetes, Transporte transporte) {
         for (int i = 0; i < vecOfertas.length; ++i) {
             System.out.println("Oferta: " + i + " peso libre " + vecOfertas[i]);
