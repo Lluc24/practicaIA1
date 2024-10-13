@@ -34,9 +34,9 @@ public class Main {
     private static void azamonHillClimbingSearch(Estado estado) {
         System.out.println("\nAzamon HillClimbing  -->");
         try {
-            SuccessorFunction successorFunction = new SuccessorFunction();
-            GoalTest goalTest = new GoalTest();
-            HeuristicFunction1 heuristicFunction1 = new HeuristicFunction1();
+            AzamonSuccessorFunction successorFunction = new AzamonSuccessorFunction();
+            AzamonGoalTest goalTest = new AzamonGoalTest();
+            AzamonHeuristicFunction1 heuristicFunction1 = new AzamonHeuristicFunction1();
             Problem problem =  new Problem(estado, successorFunction, goalTest, heuristicFunction1);
             Search search =  new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problem,search);
@@ -51,9 +51,9 @@ public class Main {
 
     private static void azamonSimulatedAnnealingSearch(Estado estado) {
         try {
-            SuccessorFunctionSA successorFunction = new SuccessorFunctionSA();
-            GoalTest goalTest = new GoalTest();
-            HeuristicFunction1 heuristicFunction1 = new HeuristicFunction1();
+            AzamonSuccessorFunctionSA successorFunction = new AzamonSuccessorFunctionSA();
+            AzamonGoalTest goalTest = new AzamonGoalTest();
+            AzamonHeuristicFunction1 heuristicFunction1 = new AzamonHeuristicFunction1();
             Problem problem =  new Problem(estado, successorFunction, goalTest, heuristicFunction1);
             Search search = new SimulatedAnnealingSearch(2000,100,5,0.001);
             SearchAgent agent = new SearchAgent(problem, search);
