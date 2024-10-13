@@ -31,16 +31,13 @@ public class Estado {
         int iOferta = 0;
         int iPaquete = 0;
         Oferta oferta = transporte.get(iOferta);
-        Paquete paquete = paquetes.get(iPaquete);
         while (iPaquete < paquetes.size()) {
+            Paquete paquete = paquetes.get(iPaquete);
             if (vecOfertas[iOferta] - paquete.getPeso() > 0) {
                 vecPaquetes[iPaquete] = iOferta;
                 vecOfertas[iOferta] -= paquete.getPeso();
-                ++iPaquete;
-                paquete = paquetes.get(iPaquete);
-
                 coste += oferta.getPrecio()*paquete.getPeso();
-                if (oferta.getDias() >= 3 && oferta.getDias() < 5) {
+                if (oferta.getDias() == 3 || oferta.getDias() == 4) {
                     coste += 0.25*paquete.getPeso();
                 }
                 else if (oferta.getDias() == 5) {
@@ -52,6 +49,7 @@ public class Estado {
                 else if (paquete.getPrioridad() == Paquete.PR3 && oferta.getDias() < 4) {
                     felicidad += 4 - oferta.getDias();
                 }
+                ++iPaquete;
             }
             else {
                 ++iOferta;
@@ -61,11 +59,11 @@ public class Estado {
     }
 
     public double heuristicoCoste() {
-        return coste;
+        return -coste;
     }
 
     public double heuristicoCoseFelicidad() {
-        return felicidad + coste;
+        return felicidad - coste;
     }
 
     public boolean moure_paquete(int ip, int oferta_desti, Paquetes paquetes, Transporte ofertas) {
