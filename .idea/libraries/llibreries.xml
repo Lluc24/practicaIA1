@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="llibreries">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/llibreries/Azamon.jar!/" />
+      <root url="jar://$PROJECT_DIR$/llibreries/Azamon-javadoc.zip!/" />
+      <root url="jar://$PROJECT_DIR$/llibreries/AIMA.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
