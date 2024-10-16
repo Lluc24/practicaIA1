@@ -279,17 +279,23 @@ public class Estado {
         for (int i = 0; i < vecOfertas.length; ++i) {
             double peso_acumulado = 0.00;
             System.out.println("---------------------------------------------------------------------------------------------------------");
-            System.out.print("| Oferta: " + i + " Peso maximo de la oferta: " + transporte.get(i).getPesomax() + ", Peso_acumulado(" + peso_acumulado + "kg) |");
+            System.out.print("| Oferta: " + i + /*+ " Peso maximo de la oferta: " + transporte.get(i).getPesomax()  + ", Peso_acumulado(" + peso_acumulado + "kg)*/" |");
+			System.out.println("dias: " + transporte.get(i).getDias());
+			System.out.println("precio: " + transporte.get(i).getPrecio());
+			System.out.println("peso maximo: " + transporte.get(i).getPesomax());
             //System.out.println(transporte.get(i).toString());
             for (int j = 0; j < vecPaquetes.length; ++j) {
                 if (vecPaquetes[j] == i) {
                     peso_acumulado += paquetes.get(j).getPeso();
-                    System.out.print(" Paquete: " + j + "Peso(" + paquetes.get(j).getPeso() + "kg), Peso_acumulado(" + peso_acumulado + "kg) |");
+                    System.out.print(" Paquete: " + j + ", Peso(" + paquetes.get(j).getPeso() + " kg) ");
                     //System.out.println(paquetes.get(j).toString());
                 }
             }
-            System.out.print("Peso libre " + vecOfertas[i] + "kg |");
+			System.out.println();
+			System.out.println(" Peso_acumulado(" + peso_acumulado + "kg) |");
+            System.out.println("Peso libre " + vecOfertas[i] + "kg |");
 		}
+		System.out.println("Coste total: " + coste);
     }
 
 	//IMPRIMIR ORIGINAL
@@ -315,16 +321,20 @@ public class Estado {
 		for (int i = 0; i < vecOfertas.length; ++i) {
 			double peso_acumulado = 0.00;
 			s += "--------------------------------------------------------------------------------------------------------- \n";
-			s += "| Oferta: " + i + " Peso maximo de la oferta: " + transporte.get(i).getPesomax() + ", Peso_acumulado(" + peso_acumulado + "kg) |";
+			s += "| Oferta: " + i /*+ " Peso maximo de la oferta: " + transporte.get(i).getPesomax() */;
+			s += ("\n dias: " + transporte.get(i).getDias());
+			s += ("\n precio: " + transporte.get(i).getPrecio());
+			s += ("\n peso maximo: " + transporte.get(i).getPesomax());
 			//System.out.println(transporte.get(i).toString());
 			for (int j = 0; j < vecPaquetes.length; ++j) {
 				if (vecPaquetes[j] == i) {
 					peso_acumulado += paquetes.get(j).getPeso();
-					s += " Paquete: " + j + "Peso(" + paquetes.get(j).getPeso() + "kg), Peso_acumulado(" + peso_acumulado + "kg) |";
+					s += " Paquete: " + j + ", Peso(" + paquetes.get(j).getPeso() + "), prioridad: " + paquetes.get(j).getPrioridad();
 					//System.out.println(paquetes.get(j).toString());
 				}
 			}
-			s += " Peso libre " + vecOfertas[i] + "kg |";
+			s += "\n Peso_acumulado(" + peso_acumulado + " kg) |";
+			s += "\n Peso libre: " + vecOfertas[i] + "kg |";
 			peso_libre += vecOfertas[i];
 		}
 		s += "peso_libre_total: " + peso_libre + "\n";

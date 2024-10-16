@@ -18,20 +18,24 @@ public class AzamonSuccessorFunction implements SuccessorFunction {
                 Estado newState = new Estado(estado_actual);
 
                 if(newState.swap(i, j)){
-                    String S = ("INTERCAMBIO " + " " + i + " " + j + " " + newState.toStringSimple());
+                    //String S = ("INTERCAMBIO " + " " + i + " " + j + " " + newState.toStringSimple());
+                    String S = ("INTERCAMBIO " + " " + i + " " + j + " " + newState.toString());
                     retVal.add(new Successor(S, newState));
                 }
             }
         }
+
         for (int i = 0; i < paquetes.size(); ++i) {
             for (int j = 0; j < transporte.size(); ++j) {
                 Estado newState = new Estado(estado_actual);
                 if(newState.moure_paquete(i, j)) {
-                    String S = "MOVIDO paquete: " + i + " a la oferta " + j + newState.toStringSimple();
+                    //String S = "MOVIDO paquete: " + i + " a la oferta " + j + newState.toStringSimple();
+                    String S = "MOVIDO paquete: " + i + " a la oferta " + j + newState.toString();
                     retVal.add(new Successor(S, newState));
                 }
             }
         }
+
 
         return retVal;
     }
