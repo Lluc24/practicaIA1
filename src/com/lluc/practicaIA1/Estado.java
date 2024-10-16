@@ -12,6 +12,7 @@ import java.util.Iterator;
 public class Estado {
 	public static Paquetes paquetes;
 	public static Transporte transporte;
+	public static double pesos_maximos = 0;
 	public int vecPaquetes[];
 	public double vecOfertas[];
 	public double coste = 0;
@@ -24,7 +25,10 @@ public class Estado {
 
         for (int i = 0; i < transporte.size(); ++i) {
             vecOfertas[i] = transporte.get(i).getPesomax();
-        }
+        	pesos_maximos += transporte.get(i).getPesomax();
+		}
+
+
 
         generarSolucion1();
         imprimir();
@@ -102,7 +106,7 @@ public class Estado {
     	Oferta oferta_des = transporte.get(oferta_desti);
     	Oferta oferta_og = transporte.get(vecPaquetes[ip]);
     	
-    	if (oferta_des.getPesomax() < vecOfertas[oferta_desti]) return false;
+    	if (0 > vecOfertas[oferta_desti]) return false;
     
     	coste += oferta_des.getPrecio()*peso_paquete;
     	coste -= oferta_og.getPrecio()*peso_paquete;
@@ -171,8 +175,8 @@ public class Estado {
     	Oferta oferta1 = transporte.get(ofertap1);
     	Oferta oferta2 = transporte.get(ofertap2);
     	
-    	if (oferta1.getPesomax() < vecOfertas[ofertap1]) return false;
-    	if (oferta2.getPesomax() < vecOfertas[ofertap2]) return false;
+    	if (0 > vecOfertas[ofertap1]) return false;
+    	if (0 > vecOfertas[ofertap2]) return false;
     	
     	//Calculamos los costes segun el precio de la oferta
     	coste -= oferta1.getPrecio()*peso_paquete1 + oferta2.getPrecio()*peso_paquete2;
@@ -275,7 +279,7 @@ public class Estado {
         for (int i = 0; i < vecOfertas.length; ++i) {
             double peso_acumulado = 0.00;
             System.out.println("---------------------------------------------------------------------------------------------------------");
-            System.out.print("| Oferta: " + i + ", Peso_acumulado(" + peso_acumulado + "kg) |");
+            System.out.print("| Oferta: " + i + " Peso maximo de la oferta: " + transporte.get(i).getPesomax() + ", Peso_acumulado(" + peso_acumulado + "kg) |");
             //System.out.println(transporte.get(i).toString());
             for (int j = 0; j < vecPaquetes.length; ++j) {
                 if (vecPaquetes[j] == i) {
@@ -284,12 +288,15 @@ public class Estado {
                     //System.out.println(paquetes.get(j).toString());
                 }
             }
-            System.out.print(" Peso libre " + vecOfertas[i] + "kg |");
-        }
+            System.out.print("Peso libre " + vecOfertas[i] + "kg |");
+		}
     }
 
 	//IMPRIMIR ORIGINAL
     public void imprimir() {
+		System.out.println("peso maximo: " + pesos_maximos);
+		System.out.println("coste: " + coste);
+
         for (int i = 0; i < vecOfertas.length; ++i) {
             System.out.println("Oferta: " + i + " peso libre " + vecOfertas[i]);
             System.out.println(transporte.get(i).toString());
@@ -302,7 +309,31 @@ public class Estado {
         }
     }
 	public String toString() {
-		String s = "coste: " + coste;
+		//String s = "coste: " + coste;
+		String s = "";
+		double peso_libre = 0;
+		for (int i = 0; i < vecOfertas.length; ++i) {
+			double peso_acumulado = 0.00;
+			s += "--------------------------------------------------------------------------------------------------------- \n";
+			s += "| Oferta: " + i + " Peso maximo de la oferta: " + transporte.get(i).getPesomax() + ", Peso_acumulado(" + peso_acumulado + "kg) |";
+			//System.out.println(transporte.get(i).toString());
+			for (int j = 0; j < vecPaquetes.length; ++j) {
+				if (vecPaquetes[j] == i) {
+					peso_acumulado += paquetes.get(j).getPeso();
+					s += " Paquete: " + j + "Peso(" + paquetes.get(j).getPeso() + "kg), Peso_acumulado(" + peso_acumulado + "kg) |";
+					//System.out.println(paquetes.get(j).toString());
+				}
+			}
+			s += " Peso libre " + vecOfertas[i] + "kg |";
+			peso_libre += vecOfertas[i];
+		}
+		s += "peso_libre_total: " + peso_libre + "\n";
+		s += "coste: " + coste + "\n";
 		return s;
+	}
+
+	public String toStringSimple() {
+	String s = "Coste: " + coste;
+	return s;
 	}
 }

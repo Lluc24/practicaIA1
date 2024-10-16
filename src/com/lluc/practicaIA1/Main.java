@@ -34,6 +34,7 @@ public class Main {
         Estado inicial = new Estado();
 
         // Seleccionar uno
+        inicial.imprimir_tabla();
         azamonHillClimbingSearch(inicial);
         //azamonSimulatedAnnealingSearch(inicial);
     }
@@ -51,6 +52,7 @@ public class Main {
             System.out.println();
             printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,15 +80,23 @@ public class Main {
         while (keys.hasNext()) {
             String key = (String) keys.next();
             String property = properties.getProperty(key);
-            System.out.println(key + " : " + property);
+            System.out.println(key + " $ " + property);
         }
 
     }
 
     private static void printActions(List actions) {
+        
         for (int i = 0; i < actions.size(); i++) {
             String action = (String) actions.get(i);
             System.out.println(action);
         }
+
+        /*
+        int n = actions.size() - 1;
+        String action = (String) actions.get(n);
+        System.out.println(action);
+        */
     }
+
 }
