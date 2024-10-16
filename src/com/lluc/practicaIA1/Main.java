@@ -12,12 +12,19 @@ import aima.search.informed.SimulatedAnnealingSearch;
 
 public class Main {
     public static void main(String[] args) {
-        int npaq = 5;
-        int seed = 1;
-        double ratio = 2;
+        System.out.println("introduce el número de paquetes");
+        Scanner scanner = new Scanner(System.in);
+        int npaq = scanner.nextInt();
+        System.out.println("introduce la semilla");
+        scanner = new Scanner(System.in);
+        int seed = scanner.nextInt();
+        System.out.println("introduce el ratio");
+        scanner = new Scanner(System.in);
+        double ratio = scanner.nextDouble();
         Paquetes paquetes = new Paquetes(npaq, seed);
         Transporte transporte = new Transporte(paquetes, ratio, seed);
-
+        Estado.paquetes = paquetes;
+        Estado.transporte = transporte;
         paquetes.sort(new Comparator<Paquete>() {
             @Override
             public int compare(Paquete p1, Paquete p2) {
@@ -25,12 +32,10 @@ public class Main {
             }
         });
         Estado inicial = new Estado();
-        Estado.paquetes = paquetes;
-        Estado.transporte = transporte;
 
         // Seleccionar uno
         azamonHillClimbingSearch(inicial);
-        azamonSimulatedAnnealingSearch(inicial);
+        //azamonSimulatedAnnealingSearch(inicial);
     }
 
     private static void azamonHillClimbingSearch(Estado estado) {
@@ -50,7 +55,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-
+    /*
     private static void azamonSimulatedAnnealingSearch(Estado estado) {
         try {
             AzamonSuccessorFunctionSA successorFunction = new AzamonSuccessorFunctionSA();
@@ -67,7 +72,7 @@ public class Main {
             e.printStackTrace();
         }
     }
-
+    */
     private static void printInstrumentation(Properties properties) {
         Iterator keys = properties.keySet().iterator();
         while (keys.hasNext()) {

@@ -38,17 +38,12 @@ public class Estado {
 			this.vecPaquetes[i] = a.vecPaquetes[i];
 		}
 		int n_ofertas = transporte.size();
+		vecOfertas = new double[n_ofertas];
 		for(int i = 0; i < n_ofertas; ++i) {
 			this.vecOfertas[i] = a.vecOfertas[i];
 		}
-		vecOfertas = new double[transporte.size()];
-
-		for (int i = 0; i < transporte.size(); ++i) {
-			vecOfertas[i] = transporte.get(i).getPesomax();
-		}
-
-		generarSolucion1();
-		imprimir();
+		this.coste = a.coste;
+		this.felicidad = a.felicidad;
 	}
 
 	public Paquetes get_paquetes() {return paquetes;}
@@ -87,17 +82,20 @@ public class Estado {
     }
 
     public double heuristicoCoste() {
-        return -coste;
+        return +coste;
     }
 
     public double heuristicoCosteFelicidad() {
-        return felicidad - coste;
+        return -felicidad + coste;
     }
 
     public boolean moure_paquete(int ip, int oferta_desti) {
     	Paquete p = paquetes.get(ip);
     	double peso_paquete = p.getPeso();
-    	
+
+		//si intenta moure a la mateixa oferta retorna error
+		if (vecPaquetes[ip] == oferta_desti) return false;
+
     	vecOfertas[vecPaquetes[ip]] += peso_paquete;
     	vecOfertas[oferta_desti] -= peso_paquete;
     	
@@ -160,7 +158,10 @@ public class Estado {
     public boolean swap(int paquete_1, int paquete_2) {
     	int ofertap1 = vecPaquetes[paquete_1];
     	int ofertap2 = vecPaquetes[paquete_2];
-    	
+
+		//si la asignació d'oferta es la mateixa per els dos paquets no la contemplem
+		if(ofertap1 == ofertap2) return false;
+
     	double peso_paquete1 = paquetes.get(paquete_1).getPeso();
     	double peso_paquete2 = paquetes.get(paquete_2).getPeso();
     	
@@ -300,4 +301,8 @@ public class Estado {
             }
         }
     }
+	public String toString() {
+		String s = "coste: " + coste;
+		return s;
+	}
 }

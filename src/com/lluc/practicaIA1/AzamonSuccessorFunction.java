@@ -27,7 +27,7 @@ public class AzamonSuccessorFunction implements SuccessorFunction {
             for (int j = 0; j < transporte.size(); ++j) {
                 Estado newState = new Estado(estado_actual);
                 if(newState.moure_paquete(i, j)) {
-                    String S = "MOVIDO paquete: " + i + " a la oferta " + j;
+                    String S = "MOVIDO paquete: " + i + " a la oferta " + j + newState.toString();
                     retVal.add(new Successor(S, newState));
                 }
             }
