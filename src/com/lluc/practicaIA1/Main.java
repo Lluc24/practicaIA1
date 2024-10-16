@@ -12,7 +12,6 @@ import aima.search.informed.SimulatedAnnealingSearch;
 
 public class Main {
     public static void main(String[] args) {
-
         int npaq = 5;
         int seed = 1;
         double ratio = 2;
@@ -25,7 +24,10 @@ public class Main {
                 return p1.getPrioridad() - p2.getPrioridad();
             }
         });
-        Estado inicial = new Estado(paquetes, transporte);
+        Estado inicial = new Estado();
+        Estado.paquetes = paquetes;
+        Estado.transporte = transporte;
+
         // Seleccionar uno
         azamonHillClimbingSearch(inicial);
         azamonSimulatedAnnealingSearch(inicial);

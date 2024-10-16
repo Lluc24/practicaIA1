@@ -10,12 +10,15 @@ import java.util.Iterator;
 
 
 public class Estado {
-    int vecPaquetes[];
-    double vecOfertas[];
-    double coste = 0;
-    double felicidad = 0;
+	public static Paquetes paquetes;
+	public static Transporte transporte;
+	public int vecPaquetes[];
+	public double vecOfertas[];
+	public double coste = 0;
+	public double felicidad = 0;
 
-    Estado(Paquetes paquetes, Transporte transporte) {
+    Estado() {
+		//Seguramente esto esta mal, pero hace el apanyo, ya veremos
         vecPaquetes = new int[paquetes.size()];
         vecOfertas = new double[transporte.size()];
 
@@ -23,11 +26,36 @@ public class Estado {
             vecOfertas[i] = transporte.get(i).getPesomax();
         }
 
-        generarSolucion1(paquetes, transporte);
-        imprimir(paquetes, transporte);
+        generarSolucion1();
+        imprimir();
     }
 
-    void generarSolucion1(Paquetes paquetes, Transporte transporte) {
+	Estado(Estado a) {
+		//Seguramente esto esta mal, pero hace el apanyo, ya veremos
+		vecPaquetes = new int[paquetes.size()];
+		int n_paquetes = paquetes.size();
+		for (int i = 0; i < n_paquetes; ++i) {
+			this.vecPaquetes[i] = a.vecPaquetes[i];
+		}
+		int n_ofertas = transporte.size();
+		for(int i = 0; i < n_ofertas; ++i) {
+			this.vecOfertas[i] = a.vecOfertas[i];
+		}
+		vecOfertas = new double[transporte.size()];
+
+		for (int i = 0; i < transporte.size(); ++i) {
+			vecOfertas[i] = transporte.get(i).getPesomax();
+		}
+
+		generarSolucion1();
+		imprimir();
+	}
+
+	public Paquetes get_paquetes() {return paquetes;}
+	public Transporte get_transporte() {return transporte;}
+
+
+    void generarSolucion1() {
         int iOferta = 0;
         int iPaquete = 0;
         Oferta oferta = transporte.get(iOferta);
@@ -66,15 +94,15 @@ public class Estado {
         return felicidad - coste;
     }
 
-    public boolean moure_paquete(int ip, int oferta_desti, Paquetes paquetes, Transporte ofertas) {
+    public boolean moure_paquete(int ip, int oferta_desti) {
     	Paquete p = paquetes.get(ip);
     	double peso_paquete = p.getPeso();
     	
     	vecOfertas[vecPaquetes[ip]] += peso_paquete;
     	vecOfertas[oferta_desti] -= peso_paquete;
     	
-    	Oferta oferta_des = ofertas.get(oferta_desti);
-    	Oferta oferta_og = ofertas.get(vecPaquetes[ip]);
+    	Oferta oferta_des = transporte.get(oferta_desti);
+    	Oferta oferta_og = transporte.get(vecPaquetes[ip]);
     	
     	if (oferta_des.getPesomax() < vecOfertas[oferta_desti]) return false;
     
@@ -129,7 +157,7 @@ public class Estado {
     	
     }
     
-    public boolean swap(int paquete_1, int paquete_2, Paquetes paquetes, Transporte ofertas) {
+    public boolean swap(int paquete_1, int paquete_2) {
     	int ofertap1 = vecPaquetes[paquete_1];
     	int ofertap2 = vecPaquetes[paquete_2];
     	
@@ -139,8 +167,8 @@ public class Estado {
     	vecOfertas[ofertap1] += peso_paquete1 - peso_paquete2;
     	vecOfertas[ofertap2] -= peso_paquete1 - peso_paquete2;
     	
-    	Oferta oferta1 = ofertas.get(ofertap1);
-    	Oferta oferta2 = ofertas.get(ofertap2);
+    	Oferta oferta1 = transporte.get(ofertap1);
+    	Oferta oferta2 = transporte.get(ofertap2);
     	
     	if (oferta1.getPesomax() < vecOfertas[ofertap1]) return false;
     	if (oferta2.getPesomax() < vecOfertas[ofertap2]) return false;
@@ -242,7 +270,7 @@ public class Estado {
     }
 
     //IMPRIMIR COMO TABLA
-    public void imprimir_tabla(Paquetes paquetes, Transporte transporte) {
+    public void imprimir_tabla() {
         for (int i = 0; i < vecOfertas.length; ++i) {
             double peso_acumulado = 0.00;
             System.out.println("---------------------------------------------------------------------------------------------------------");
@@ -260,7 +288,7 @@ public class Estado {
     }
 
 	//IMPRIMIR ORIGINAL
-    public void imprimir(Paquetes paquetes, Transporte transporte) {
+    public void imprimir() {
         for (int i = 0; i < vecOfertas.length; ++i) {
             System.out.println("Oferta: " + i + " peso libre " + vecOfertas[i]);
             System.out.println(transporte.get(i).toString());

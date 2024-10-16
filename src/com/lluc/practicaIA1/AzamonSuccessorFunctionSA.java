@@ -28,9 +28,9 @@ public class AzamonSuccessorFunctionSA /*implements SuccessorFunction*/  {
 
 
         //ProbTSPBoard newBoard = new ProbTSPBoard(board.getNCities(), board.getPath(), board.getDists());
-        Estado newState = new Estado(paquetes, transporte);
+        Estado newState = new Estado();
 
-        if(newState.swap(i, j, paquetes, transporte)) {
+        if(newState.swap(i, j)) {
 
             //double   v = TSPHF.getHeuristicValue(newBoard);
             String S = ("INTERCAMBIO " + " " + i + " " + j + " " + newState.toString());
