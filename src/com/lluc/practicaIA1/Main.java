@@ -12,15 +12,24 @@ import aima.search.informed.SimulatedAnnealingSearch;
 
 public class Main {
     public static void main(String[] args) {
-        int npaq = 5;
-        int seed = 1;
-        double ratio = 2;
+        System.out.print("Introduce numero de paquetes: ");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println();
+        int npaq = scanner.nextInt();
+
+        Random r = new Random();
+        int seed = r.nextInt();
+
+        System.out.print("Introduce ratio de espacio ");
+        scanner = new Scanner(System.in);
+        System.out.println();
+        double ratio = scanner.nextDouble();
         Paquetes paquetes = new Paquetes(npaq, seed);
         Transporte transporte = new Transporte(paquetes, ratio, seed);
 
         Estado.paquetes = paquetes;
         Estado.transporte = transporte;
-        Estado.semilla = seed;
+        Estado.semilla = seed; //me paree que esto no es necesario
 
         paquetes.sort(new Comparator<Paquete>() {
             @Override
@@ -31,7 +40,7 @@ public class Main {
         Estado inicial = new Estado();
 
         // Seleccionar uno
-        //azamonHillClimbingSearch(inicial);
+        azamonHillClimbingSearch(inicial);
         azamonSimulatedAnnealingSearch(inicial);
     }
 
@@ -48,6 +57,12 @@ public class Main {
             System.out.println();
             printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
+
+            Estado solucion = (Estado) search.getGoalState();
+            System.out.println();
+            System.out.println("Solucion Hill Climbing");
+            solucion.imprimir_tabla();
+            System.out.println();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -60,12 +75,19 @@ public class Main {
             AzamonGoalTest goalTest = new AzamonGoalTest();
             AzamonHeuristicFunction1 heuristicFunction1 = new AzamonHeuristicFunction1();
             Problem problem =  new Problem(estado, successorFunction, goalTest, heuristicFunction1);
-            Search search = new SimulatedAnnealingSearch(10,2,1,0.001);
+            Search search = new SimulatedAnnealingSearch(16000, 100, 5, 0.001);
             SearchAgent agent = new SearchAgent(problem, search);
 
             System.out.println();
             printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
+
+            Estado solucion = (Estado) search.getGoalState();
+            System.out.println();
+            System.out.println("Solucion Simulated Annealing");
+            solucion.imprimir_tabla();
+            System.out.println();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,9 +104,10 @@ public class Main {
     }
 
     private static void printActions(List actions) {
-        for (int i = 0; i < actions.size(); i++) {
-            String action = (String) actions.get(i);
+        /*for (int i = 0; i < actions.size(); i++) {
+            String action = actions.toString();
             System.out.println(action);
-        }
+        }*/
+        System.out.println(actions.toString());
     }
 }

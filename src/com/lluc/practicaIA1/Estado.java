@@ -13,10 +13,15 @@ public class Estado {
     public static int semilla;
     public static Paquetes paquetes;
     public static Transporte transporte;
-    public int vecPaquetes[];
-    public double vecOfertas[];
-    public double coste = 0;
-    public double felicidad = 0;
+    private int vecPaquetes[];
+    private double vecOfertas[];
+    private double coste = 0;
+    private double felicidad = 0;
+
+    public double[] get_vec_ofertas() {return vecOfertas;}
+    public int[] get_vec_paquetes() {return vecPaquetes;}
+    public double get_coste() {return coste;}
+    public double get_felicidad() {return felicidad;}
 
     Estado() {
         //Seguramente esto esta mal, pero hace el apanyo, ya veremos
