@@ -40,9 +40,19 @@ public class Main {
         Estado inicial = new Estado();
 
         // Seleccionar uno
+        long ini_time, end_time;
+        ini_time = System.nanoTime();
         azamonHillClimbingSearch(inicial);
-        azamonSimulatedAnnealingSearch(inicial);
+        end_time = System.nanoTime();
+        System.out.println("Durada Hill Climbing: " + (end_time-ini_time)/1000000 + "ms" );
+        /*
+        ini_time = System.nanoTime();
+        azamonSimulatedAnnealingSearch(inicial, npaq, ratio);
+        end_time = System.nanoTime();
+        System.out.println("Durada Simulated Annealing: " + (end_time-ini_time)/1000000 + "ms" );
+        */
     }
+
 
     private static void azamonHillClimbingSearch(Estado estado) {
         System.out.println("\nAzamon HillClimbing  -->");
@@ -59,33 +69,46 @@ public class Main {
             printInstrumentation(agent.getInstrumentation());
 
             Estado solucion = (Estado) search.getGoalState();
+
             System.out.println();
+            /*
             System.out.println("Solucion Hill Climbing");
             solucion.imprimir_tabla();
+            */
+            System.out.print("Coste HC: " + solucion.get_coste());
             System.out.println();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static void azamonSimulatedAnnealingSearch(Estado estado) {
+    private static void azamonSimulatedAnnealingSearch(Estado estado, int n_paquetes, double ratio) {
         System.out.println("\nAzamon Simulated Annealing  -->");
         try {
             AzamonSuccessorFunctionSA successorFunction = new AzamonSuccessorFunctionSA();
             AzamonGoalTest goalTest = new AzamonGoalTest();
             AzamonHeuristicFunction1 heuristicFunction1 = new AzamonHeuristicFunction1();
             Problem problem =  new Problem(estado, successorFunction, goalTest, heuristicFunction1);
-            Search search = new SimulatedAnnealingSearch(16000, 100, 5, 0.001);
+            Search search = new SimulatedAnnealingSearch((n_paquetes*n_paquetes)/*(int)((n_paquetes * 1000)*(1/ratio))*/, 200, 20, 0.001);
+            //Steps: pasos maximos de la solución (mi idea es que ha de ser dependiente del numero de paquetes)
+            //Stiter: ni idea
+            //k = numero de nodos succesores desde nodo actual
+            //lambda = temperatura inicial
             SearchAgent agent = new SearchAgent(problem, search);
 
             System.out.println();
-            printActions(agent.getActions());
-            printInstrumentation(agent.getInstrumentation());
+            //printActions(agent.getActions());
+            //printInstrumentation(agent.getInstrumentation());
 
             Estado solucion = (Estado) search.getGoalState();
+            /*
             System.out.println();
             System.out.println("Solucion Simulated Annealing");
             solucion.imprimir_tabla();
+
+            System.out.println();
+            */
+            System.out.print("Coste SA: " + solucion.get_coste());
             System.out.println();
 
         } catch (Exception e) {
@@ -108,6 +131,6 @@ public class Main {
             String action = actions.toString();
             System.out.println(action);
         }*/
-        System.out.println(actions.toString());
+       System.out.println(actions.toString());
     }
 }
