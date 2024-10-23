@@ -15,13 +15,11 @@ public class Main {
         System.out.print("Introduce numero de paquetes: ");
         Scanner scanner = new Scanner(System.in);
         int npaq = scanner.nextInt();
-        System.out.println();
 
         int seed;
         System.out.print("Quieres semilla random? [1 para si / 0 para no]: ");
         scanner = new Scanner(System.in);
         int random = scanner.nextInt();
-        System.out.println();
         if (random == 1) {
             Random r = new Random();
             seed = r.nextInt();
@@ -31,15 +29,17 @@ public class Main {
             System.out.print("Introduce la semilla: ");
             scanner = new Scanner(System.in);
             seed = scanner.nextInt();
-            System.out.println();
         }
 
-        boolean greedy = true;
+        boolean greedy;
+        System.out.print("Que estrategia quieres usar? [1 para avariciosa / 0 para ingenua]: ");
+        scanner = new Scanner(System.in);
+        if (scanner.nextInt() == 1) greedy = true;
+        else greedy = false;
 
         System.out.print("Introduce ratio de espacio: ");
         Scanner scanner2 = new Scanner(System.in);
         double ratio = scanner2.nextDouble();
-        System.out.println();
 
         Paquetes paquetes = new Paquetes(npaq, seed);
         Transporte transporte = new Transporte(paquetes, ratio, seed);
@@ -92,6 +92,7 @@ public class Main {
         ini_time = System.nanoTime();
 
         Estado inicial = new Estado(greedy);
+        inicial.imprimir_tabla_2();
 
         azamonHillClimbingSearch(inicial);
         end_time = System.nanoTime();
@@ -115,9 +116,8 @@ public class Main {
 
             Estado solucion = (Estado) search.getGoalState();
 
-            System.out.println();
-            System.out.print("Coste HC: " + solucion.getCosteEU());
-            System.out.println();
+            System.out.println("Coste HC: " + solucion.getCosteEU() + " €");
+            solucion.imprimir_tabla_2();
         } catch (Exception e) {
             e.printStackTrace();
         }

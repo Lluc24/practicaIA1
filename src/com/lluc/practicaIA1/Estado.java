@@ -41,6 +41,7 @@ public class Estado {
 
         if (!solucionInicialValida()) {
             System.out.println("Solucion invalida!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            System.exit(0);
         }
     }
 
@@ -70,7 +71,7 @@ public class Estado {
         Oferta oferta = transporte.get(iOferta);
         while (iPaquete < paquetes.size()) {
             Paquete paquete = paquetes.get(iPaquete);
-            if (vecOfertas[iOferta] - paquete.getPeso() > 0) {
+            if (vecOfertas[iOferta] - paquete.getPeso() >= 0) {
                 vecPaquetes[iPaquete] = iOferta;
                 vecOfertas[iOferta] -= paquete.getPeso();
                 coste += oferta.getPrecio() * paquete.getPeso();
