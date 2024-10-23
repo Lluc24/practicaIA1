@@ -14,43 +14,88 @@ public class Main {
     public static void main(String[] args) {
         System.out.print("Introduce numero de paquetes: ");
         Scanner scanner = new Scanner(System.in);
-        System.out.println();
         int npaq = scanner.nextInt();
-
-        Random r = new Random();
-        int seed = r.nextInt();
-
-        System.out.print("Introduce ratio de espacio ");
-        scanner = new Scanner(System.in);
         System.out.println();
-        double ratio = scanner.nextDouble();
+
+        int seed;
+        System.out.print("Quieres semilla random? [1 para si / 0 para no]: ");
+        scanner = new Scanner(System.in);
+        int random = scanner.nextInt();
+        System.out.println();
+        if (random == 1) {
+            Random r = new Random();
+            seed = r.nextInt();
+            System.out.println("La semilla es: " + seed);
+        }
+        else {
+            System.out.print("Introduce la semilla: ");
+            scanner = new Scanner(System.in);
+            seed = scanner.nextInt();
+            System.out.println();
+        }
+
+        boolean greedy = true;
+
+        System.out.print("Introduce ratio de espacio: ");
+        Scanner scanner2 = new Scanner(System.in);
+        double ratio = scanner2.nextDouble();
+        System.out.println();
+
         Paquetes paquetes = new Paquetes(npaq, seed);
         Transporte transporte = new Transporte(paquetes, ratio, seed);
 
         Estado.paquetes = paquetes;
         Estado.transporte = transporte;
-        Estado.semilla = seed; //me paree que esto no es necesario
 
-        paquetes.sort(new Comparator<Paquete>() {
-            @Override
-            public int compare(Paquete p1, Paquete p2) {
-                return p1.getPrioridad() - p2.getPrioridad();
-            }
-        });
-        Estado inicial = new Estado();
+        if (greedy) {
+            paquetes.sort(new Comparator<Paquete>() {
+                @Override
+                public int compare(Paquete p1, Paquete p2) {
+                    // TODO return 1 if p2 should be before p1
+                    //      return -1 if p1 should be before p2
+                    //      return 0 otherwise (meaning the order stays the same)
+                    if (p1.getPrioridad() < p2.getPrioridad()) return -1;
+                    else if (p1.getPrioridad() > p2.getPrioridad()) return 1;
+                    else {
+                        if (p1.getPeso() > p2.getPeso()) return -1;
+                        else if (p1.getPeso() < p2.getPeso()) return 1;
+                        else return 0;
+                    }
+                }
+            });
 
-        // Seleccionar uno
+            transporte.sort(new Comparator<Oferta>() {
+                @Override
+                public int compare(Oferta o1, Oferta o2) {
+                    // TODO return 1 if o2 should be before o1
+                    //      return -1 if o1 should be before o2
+                    //      return 0 otherwise (meaning the order stays the same)
+                    if (o1.getDias() < o2.getDias()) return -1;
+                    else if (o1.getDias() > o2.getDias()) return 1;
+                    else {
+                        if (o1.getPrecio() > o2.getPrecio()) return 1;
+                        else if (o1.getPrecio() < o2.getPrecio()) return -1;
+                        else return 0;
+                    }
+                }
+            });
+        } else {
+            paquetes.sort(new Comparator<Paquete>() {
+                @Override
+                public int compare(Paquete p1, Paquete p2) {
+                    return p1.getPrioridad() - p2.getPrioridad();
+                }
+            });
+        }
+
         long ini_time, end_time;
         ini_time = System.nanoTime();
+
+        Estado inicial = new Estado(greedy);
+
         azamonHillClimbingSearch(inicial);
         end_time = System.nanoTime();
         System.out.println("Durada Hill Climbing: " + (end_time-ini_time)/1000000 + "ms" );
-        /*
-        ini_time = System.nanoTime();
-        azamonSimulatedAnnealingSearch(inicial, npaq, ratio);
-        end_time = System.nanoTime();
-        System.out.println("Durada Simulated Annealing: " + (end_time-ini_time)/1000000 + "ms" );
-        */
     }
 
 
@@ -71,11 +116,7 @@ public class Main {
             Estado solucion = (Estado) search.getGoalState();
 
             System.out.println();
-            /*
-            System.out.println("Solucion Hill Climbing");
-            solucion.imprimir_tabla();
-            */
-            System.out.print("Coste HC: " + solucion.get_coste());
+            System.out.print("Coste HC: " + solucion.getCosteEU());
             System.out.println();
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,7 +149,7 @@ public class Main {
 
             System.out.println();
             */
-            System.out.print("Coste SA: " + solucion.get_coste());
+            System.out.print("Coste SA: " + solucion.getCosteEU());
             System.out.println();
 
         } catch (Exception e) {

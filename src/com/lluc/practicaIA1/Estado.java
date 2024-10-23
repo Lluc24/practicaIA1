@@ -23,31 +23,35 @@ public class Estado {
     public double get_coste() {return coste;}
     public double get_felicidad() {return felicidad;}
 
-    Estado() {
+    Estado(boolean greedy) {
         //Seguramente esto esta mal, pero hace el apanyo, ya veremos
         vecPaquetes = new int[paquetes.size()];
         vecOfertas = new double[transporte.size()];
+
+        for (int i = 0; i < paquetes.size(); ++i) {
+            vecPaquetes[i] = -1;
+        }
 
         for (int i = 0; i < transporte.size(); ++i) {
             vecOfertas[i] = transporte.get(i).getPesomax();
         }
 
-        generarSolucion1();
-        imprimir();
+        if (greedy) generarSolucionGreedy();
+        else generarSolucionIngenua();
+
+        if (!solucionInicialValida()) {
+            System.out.println("Solucion invalida!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        }
     }
 
     Estado(Estado a) {
         //Seguramente esto esta mal, pero hace el apanyo, ya veremos
         vecPaquetes = new int[paquetes.size()];
         int n_paquetes = paquetes.size();
-        for (int i = 0; i < n_paquetes; ++i) {
-            this.vecPaquetes[i] = a.vecPaquetes[i];
-        }
+        System.arraycopy(a.vecPaquetes, 0, this.vecPaquetes, 0, n_paquetes);
         int n_ofertas = transporte.size();
         this.vecOfertas = new double[n_ofertas];
-        for (int i = 0; i < n_ofertas; ++i) {
-            this.vecOfertas[i] = a.vecOfertas[i];
-        }
+        System.arraycopy(a.vecOfertas, 0, this.vecOfertas, 0, n_ofertas);
         this.coste = a.coste;
         this.felicidad = a.felicidad;
     }
@@ -60,7 +64,7 @@ public class Estado {
         return transporte;
     }
 
-    void generarSolucion1() {
+    void generarSolucionIngenua() {
         int iOferta = 0;
         int iPaquete = 0;
         Oferta oferta = transporte.get(iOferta);
@@ -84,6 +88,39 @@ public class Estado {
             } else {
                 ++iOferta;
                 oferta = transporte.get(iOferta);
+            }
+        }
+    }
+
+    void generarSolucionGreedy() {
+        int iPaquete = 0;
+        while (iPaquete < vecPaquetes.length) {
+            Paquete paquete = paquetes.get(iPaquete);
+            boolean asignado = false;
+            int iOferta = 0;
+            Oferta oferta = transporte.get(iOferta);
+            while (!asignado) {
+                if (vecOfertas[iOferta] - paquete.getPeso() >= 0) {
+                    asignado = true;
+                    vecPaquetes[iPaquete] = iOferta;
+                    vecOfertas[iOferta] -= paquete.getPeso();
+                    coste += oferta.getPrecio() * paquete.getPeso();
+                    if (oferta.getDias() == 3 || oferta.getDias() == 4) {
+                        coste += 0.25 * paquete.getPeso();
+                    } else if (oferta.getDias() == 5) {
+                        coste += 2 * 0.25 * paquete.getPeso();
+                    }
+                    if (paquete.getPrioridad() == Paquete.PR2 && oferta.getDias() == 1) {
+                        felicidad += 1;
+                    } else if (paquete.getPrioridad() == Paquete.PR3 && oferta.getDias() < 4) {
+                        felicidad += 4 - oferta.getDias();
+                    }
+                    ++iPaquete;
+                }
+                else {
+                    ++iOferta;
+                    oferta = transporte.get(iOferta);
+                }
             }
         }
     }
@@ -268,40 +305,76 @@ public class Estado {
         return true;
     }
 
-    //IMPRIMIR COMO TABLA
-    public void imprimir_tabla() {
+    public void imprimir_tabla_2() {
         for (int i = 0; i < vecOfertas.length; ++i) {
-            double peso_acumulado = 0.00;
+            double peso_acumulado = 0;
             System.out.println("---------------------------------------------------------------------------------------------------------");
-            System.out.print("| Oferta: " + i + ", Peso_acumulado(" + peso_acumulado + "kg) |");
-            //System.out.println(transporte.get(i).toString());
+            String oferta = "Oferta " + i + transporte.get(i).toString().substring(8);
+            System.out.print("| " + oferta + " |");
             for (int j = 0; j < vecPaquetes.length; ++j) {
                 if (vecPaquetes[j] == i) {
                     peso_acumulado += paquetes.get(j).getPeso();
-                    System.out.print(" Paquete: " + j + "Peso(" + paquetes.get(j).getPeso() + "kg), Peso_acumulado(" + peso_acumulado + "kg) |");
-                    //System.out.println(paquetes.get(j).toString());
+                    String paquete = paquetes.get(j).toString().substring(9);
+                    System.out.print(" Paquete " + j + paquete + " |");
                 }
             }
-            System.out.print(" Peso libre " + vecOfertas[i] + "kg |");
+            System.out.print(" Peso libre por vector->" + vecOfertas[i] + "kg ");
+            System.out.print("contador->" + (transporte.get(i).getPesomax() - peso_acumulado) + "kg |");
         }
     }
 
-    //IMPRIMIR ORIGINAL
-    public void imprimir() {
+    private boolean solucionInicialValida() {
+        boolean[] paqueteAsignado = new boolean[vecPaquetes.length];
+        for (int i = 0; i < vecPaquetes.length; ++i) paqueteAsignado[i] = false;
+
         for (int i = 0; i < vecOfertas.length; ++i) {
-            System.out.println("Oferta: " + i + " peso libre " + vecOfertas[i]);
-            System.out.println(transporte.get(i).toString());
+            double peso_acumulado = 0;
             for (int j = 0; j < vecPaquetes.length; ++j) {
                 if (vecPaquetes[j] == i) {
-                    System.out.println("Paquete: " + j);
-                    System.out.println(paquetes.get(j).toString());
+                    peso_acumulado += paquetes.get(j).getPeso();
+                    if (paquetes.get(j).getPrioridad() == Paquete.PR1) {
+                        if (transporte.get(i).getDias() > 1) {
+                            System.out.println("1 P" + j + "O" + i);
+                            return false;
+                        }
+                    } else if (paquetes.get(j).getPrioridad() == Paquete.PR2) {
+                        if (transporte.get(i).getDias() > 3) {
+                            System.out.println("2 P" + j + "O" + i);
+                            return false;
+                        }
+                    }
+                    paqueteAsignado[j] = true;
                 }
             }
+            if (transporte.get(i).getPesomax() < peso_acumulado) {
+                System.out.println("3 O" + i);
+                return false;
+            }
+            if (transporte.get(i).getPesomax() - peso_acumulado != vecOfertas[i]) {
+                System.out.println("4 O" + i);
+                return false;
+            }
         }
+        for (int i = 0; i < vecPaquetes.length; ++i) {
+            if (!paqueteAsignado[i]) {
+                System.out.println("5 P" + i);
+                return false;
+            }
+        }
+        return true;
     }
 
-    public String toString() {
+        public String toString() {
         String s = "coste: " + coste;
         return s;
+    }
+
+    public String getCosteEU() {
+        String costeEU = "" + coste;
+        int comma = 0;
+        for (int i = 0; i < costeEU.length(); ++i) {
+            if (costeEU.charAt(i) == '.') comma = i;
+        }
+        return costeEU.substring(0, comma) + "," + costeEU.substring(comma+1, comma+3);
     }
 }
