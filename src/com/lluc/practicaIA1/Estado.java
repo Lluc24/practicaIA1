@@ -131,7 +131,7 @@ public class Estado {
     }
 
     public double heuristicoCosteFelicidad() {
-        return -felicidad + coste;
+        return - felicidad + coste;
     }
 
     public boolean moure_paquete(int ip, int oferta_desti) {
@@ -169,13 +169,11 @@ public class Estado {
         } else if (p.getPrioridad() == Paquete.PR2) {
             if (oferta_des.getDias() > 3) return false;
         }
-
         int antelacion_original = 0;
         if (p.getPrioridad() == Paquete.PR2) {
             if (oferta_og.getDias() == 1) antelacion_original = 1;
-        } else if (p.getPrioridad() == Paquete.PR3) {
-            if (oferta_og.getDias() == 1) antelacion_original = 2;
-            if (oferta_og.getDias() == 2 || oferta_og.getDias() == 3) antelacion_original = 1;
+        } else if (p.getPrioridad() == Paquete.PR3 && oferta_og.getDias() < 4) {
+            antelacion_original += 4 - oferta_og.getDias();
         }
 
         felicidad -= antelacion_original;
@@ -184,9 +182,8 @@ public class Estado {
 
         if (p.getPrioridad() == Paquete.PR2) {
             if (oferta_des.getDias() == 1) nueva_antelacion = 1;
-        } else if (p.getPrioridad() == Paquete.PR3) {
-            if (oferta_des.getDias() == 1) nueva_antelacion = 2;
-            if (oferta_des.getDias() == 2 || oferta_des.getDias() == 3) nueva_antelacion = 1;
+        } else if (p.getPrioridad() == Paquete.PR3 && oferta_des.getDias() < 4) {
+            nueva_antelacion += 4 - oferta_des.getDias();
         }
 
         felicidad += nueva_antelacion;
@@ -247,16 +244,14 @@ public class Estado {
 
         if (paquete1.getPrioridad() == Paquete.PR2) {
             if (oferta1.getDias() == 1) antelacion_original1 = 1;
-        } else if (paquete1.getPrioridad() == Paquete.PR3) {
-            if (oferta1.getDias() == 1) antelacion_original1 = 2;
-            if (oferta1.getDias() == 2 || oferta1.getDias() == 3) antelacion_original1 = 1;
+        } else if (paquete1.getPrioridad() == Paquete.PR3 && oferta1.getDias() < 4) {
+            antelacion_original1 += 4 - oferta1.getDias();
         }
 
         if (paquete2.getPrioridad() == Paquete.PR2) {
             if (oferta2.getDias() == 1) antelacion_original2 = 1;
-        } else if (paquete2.getPrioridad() == Paquete.PR3) {
-            if (oferta2.getDias() == 1) antelacion_original2 = 2;
-            if (oferta2.getDias() == 2 || oferta2.getDias() == 3) antelacion_original2 = 1;
+        } else if (paquete2.getPrioridad() == Paquete.PR3 && oferta2.getDias() < 4) {
+            antelacion_original2 += 4 - oferta2.getDias();
         }
 
         felicidad -= antelacion_original2 + antelacion_original1;
@@ -268,17 +263,15 @@ public class Estado {
 
         if (paquete1.getPrioridad() == Paquete.PR2) {
             if (oferta2.getDias() == 1) antelacion_postcambio1 = 1;
-        } else if (paquete1.getPrioridad() == Paquete.PR3) {
-            if (oferta2.getDias() == 1) antelacion_postcambio1 = 2;
-            if (oferta2.getDias() == 2 || oferta2.getDias() == 3) antelacion_postcambio1 = 1;
+        } else if (paquete1.getPrioridad() == Paquete.PR3 && oferta2.getDias() < 4) {
+            antelacion_postcambio1 += 4 - oferta2.getDias();
         }
 
 
         if (paquete2.getPrioridad() == Paquete.PR2) {
             if (oferta1.getDias() == 1) antelacion_postcambio2 = 1;
-        } else if (paquete2.getPrioridad() == Paquete.PR3) {
-            if (oferta1.getDias() == 1) antelacion_postcambio2 = 2;
-            if (oferta1.getDias() == 2 || oferta2.getDias() == 3) antelacion_postcambio2 = 1;
+        } else if (paquete2.getPrioridad() == Paquete.PR3 && oferta1.getDias() < 4) {
+            antelacion_postcambio2 += 4 - oferta1.getDias();
         }
 
         felicidad += antelacion_postcambio1 + antelacion_postcambio2;
@@ -365,8 +358,9 @@ public class Estado {
         return true;
     }
 
-        public String toString() {
+    public String toString() {
         String s = "coste: " + coste;
+        //s += "\nFelicidad: " + felicidad;
         return s;
     }
 
