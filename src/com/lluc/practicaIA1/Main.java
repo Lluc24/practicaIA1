@@ -37,7 +37,7 @@ public class Main {
             System.out.print("Parametro K [25 por defecto]: ");
             scanner = new Scanner(System.in);
             k = scanner.nextInt();
-            System.out.println("Parametro lambda [0.01 por defecto]: ");
+            System.out.print("Parametro lambda [0.01 por defecto]: ");
             scanner = new Scanner(System.in);
             lambda = scanner.nextDouble();
         }
