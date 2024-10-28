@@ -10,31 +10,27 @@ import java.util.Iterator;
 
 
 public class Estado {
-    public static int semilla;
     public static Paquetes paquetes;
     public static Transporte transporte;
     private int vecPaquetes[];
     private double vecOfertas[];
     private double coste = 0;
     private double felicidad = 0;
-
-    public double[] get_vec_ofertas() {return vecOfertas;}
-    public int[] get_vec_paquetes() {return vecPaquetes;}
-    public double get_coste() {return coste;}
-    public double get_felicidad() {return felicidad;}
+    
+    public double getCoste() {
+        return coste;
+    }
+    public double getFelicidad() {
+        return felicidad;
+    }
 
     Estado(boolean greedy) {
-        //Seguramente esto esta mal, pero hace el apanyo, ya veremos
         vecPaquetes = new int[paquetes.size()];
         vecOfertas = new double[transporte.size()];
 
-        for (int i = 0; i < paquetes.size(); ++i) {
-            vecPaquetes[i] = -1;
-        }
+        for (int i = 0; i < paquetes.size(); ++i) vecPaquetes[i] = -1;
 
-        for (int i = 0; i < transporte.size(); ++i) {
-            vecOfertas[i] = transporte.get(i).getPesomax();
-        }
+        for (int i = 0; i < transporte.size(); ++i) vecOfertas[i] = transporte.get(i).getPesomax();
 
         if (greedy) generarSolucionGreedy();
         else generarSolucionIngenua();
@@ -46,23 +42,12 @@ public class Estado {
     }
 
     Estado(Estado a) {
-        //Seguramente esto esta mal, pero hace el apanyo, ya veremos
         vecPaquetes = new int[paquetes.size()];
-        int n_paquetes = paquetes.size();
-        System.arraycopy(a.vecPaquetes, 0, this.vecPaquetes, 0, n_paquetes);
-        int n_ofertas = transporte.size();
-        this.vecOfertas = new double[n_ofertas];
-        System.arraycopy(a.vecOfertas, 0, this.vecOfertas, 0, n_ofertas);
+        System.arraycopy(a.vecPaquetes, 0, this.vecPaquetes, 0, paquetes.size());
+        this.vecOfertas = new double[transporte.size()];
+        System.arraycopy(a.vecOfertas, 0, this.vecOfertas, 0, transporte.size());
         this.coste = a.coste;
         this.felicidad = a.felicidad;
-    }
-
-    public Paquetes get_paquetes() {
-        return paquetes;
-    }
-
-    public Transporte get_transporte() {
-        return transporte;
     }
 
     void generarSolucionIngenua() {
@@ -124,14 +109,6 @@ public class Estado {
                 }
             }
         }
-    }
-
-    public double heuristicoCoste() {
-        return +coste;
-    }
-
-    public double heuristicoCosteFelicidad() {
-        return - felicidad + coste;
     }
 
     public boolean moure_paquete(int ip, int oferta_desti) {
@@ -359,17 +336,19 @@ public class Estado {
     }
 
     public String toString() {
-        String s = "coste: " + coste;
-        //s += "\nFelicidad: " + felicidad;
+        String s = "Valores (" + getCosteEU() + " €, " + felicidad + " feliz)";
         return s;
     }
 
     public String getCosteEU() {
         String costeEU = "" + coste;
-        int comma = 0;
+        int comma = -1;
         for (int i = 0; i < costeEU.length(); ++i) {
             if (costeEU.charAt(i) == '.') comma = i;
         }
+        if (comma == -1) return costeEU;
+        if (comma == costeEU.length() - 1) return costeEU.substring(0, comma);
+        if (comma == costeEU.length() - 2) return costeEU.substring(0, comma) + "," + costeEU.charAt(comma+1);
         return costeEU.substring(0, comma) + "," + costeEU.substring(comma+1, comma+3);
     }
 }
