@@ -76,6 +76,10 @@ public class Main {
             scanner = new Scanner(System.in);
             b = scanner.nextDouble();
         }
+        else {
+            a = 1;
+            b = 0;
+        }
 
         long ini_time, end_time;
         ini_time = System.nanoTime();
@@ -85,6 +89,8 @@ public class Main {
 
         Estado.paquetes = paquetes;
         Estado.transporte = transporte;
+        Estado.a = a;
+        Estado.b = b;
 
         if (greedy) {
             paquetes.sort(new Comparator<Paquete>() {
@@ -129,16 +135,9 @@ public class Main {
         }
 
         Estado inicial = new Estado(greedy);
-        inicial.imprimir_tabla_2();
 
-        if (hillClimb) {
-            if (heurisitcaCoste) azamonHillClimbingSearch(inicial);
-            else azamonHillClimbingSearch(inicial, a, b);
-        }
-        else {
-            if (heurisitcaCoste) azamonSimulatedAnnealingSearch(inicial, steps, stiter, k, lambda);
-            else azamonSimulatedAnnealingSearch(inicial, steps, stiter, k, lambda, a, b);
-        }
+        if (hillClimb) azamonHillClimbingSearch(inicial);
+        else azamonSimulatedAnnealingSearch(inicial, steps, stiter, k, lambda);
 
 
         end_time = System.nanoTime();
@@ -152,7 +151,7 @@ public class Main {
         try {
             AzamonSuccessorFunction successorFunction = new AzamonSuccessorFunction();
             AzamonGoalTest goalTest = new AzamonGoalTest();
-            AzamonHeuristicFunction1 heuristicFunction = new AzamonHeuristicFunction1();
+            AzamonHeuristicFunction heuristicFunction = new AzamonHeuristicFunction();
             Problem problem =  new Problem(estado, successorFunction, goalTest, heuristicFunction);
             Search search =  new HillClimbingSearch();
             SearchAgent agent = new SearchAgent(problem,search);
@@ -164,30 +163,6 @@ public class Main {
             Estado solucion = (Estado) search.getGoalState();
 
             System.out.println("Valores de la solucion final: (" + solucion.getCosteEU() + " €, " + solucion.getFelicidad() + " feliz)");
-            solucion.imprimir_tabla_2();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void azamonHillClimbingSearch(Estado estado, double a, double b) {
-        System.out.println("\nAzamon Hill Climbing  -->");
-        try {
-            AzamonSuccessorFunction successorFunction = new AzamonSuccessorFunction();
-            AzamonGoalTest goalTest = new AzamonGoalTest();
-            AzamonHeuristicFunction2 heuristicFunction = new AzamonHeuristicFunction2(a, b);
-            Problem problem =  new Problem(estado, successorFunction, goalTest, heuristicFunction);
-            Search search =  new HillClimbingSearch();
-            SearchAgent agent = new SearchAgent(problem,search);
-
-            System.out.println();
-            printActions(agent.getActions());
-            printInstrumentation(agent.getInstrumentation());
-
-            Estado solucion = (Estado) search.getGoalState();
-
-            System.out.println("Valores de la solucion final: (" + solucion.getCosteEU() + " €, " + solucion.getFelicidad() + " feliz)");
-            solucion.imprimir_tabla_2();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -198,7 +173,7 @@ public class Main {
         try {
             AzamonSuccessorFunctionSA successorFunction = new AzamonSuccessorFunctionSA();
             AzamonGoalTest goalTest = new AzamonGoalTest();
-            AzamonHeuristicFunction1 heuristicFunction = new AzamonHeuristicFunction1();
+            AzamonHeuristicFunction heuristicFunction = new AzamonHeuristicFunction();
             Problem problem =  new Problem(estado, successorFunction, goalTest, heuristicFunction);
             Search search = new SimulatedAnnealingSearch(steps, stiter, k, lambda);
             SearchAgent agent = new SearchAgent(problem, search);
@@ -210,31 +185,6 @@ public class Main {
             Estado solucion = (Estado) search.getGoalState();
 
             System.out.println("Valores de la solucion final: (" + solucion.getCosteEU() + " €, " + solucion.getFelicidad() + " feliz)");
-            solucion.imprimir_tabla_2();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void azamonSimulatedAnnealingSearch(Estado estado, int steps, int stiter, int k, double lambda, double a, double b) {
-        System.out.println("\nAzamon Simulated Annealing  -->");
-        try {
-            AzamonSuccessorFunctionSA successorFunction = new AzamonSuccessorFunctionSA();
-            AzamonGoalTest goalTest = new AzamonGoalTest();
-            AzamonHeuristicFunction2 heuristicFunction = new AzamonHeuristicFunction2(a, b);
-            Problem problem =  new Problem(estado, successorFunction, goalTest, heuristicFunction);
-            Search search = new SimulatedAnnealingSearch(steps, stiter, k, lambda);
-            SearchAgent agent = new SearchAgent(problem, search);
-
-            System.out.println();
-            printActions(agent.getActions());
-            printInstrumentation(agent.getInstrumentation());
-
-            Estado solucion = (Estado) search.getGoalState();
-
-            System.out.println("Valores de la solucion final: (" + solucion.getCosteEU() + " €, " + solucion.getFelicidad() + " feliz)");
-            solucion.imprimir_tabla_2();
 
         } catch (Exception e) {
             e.printStackTrace();

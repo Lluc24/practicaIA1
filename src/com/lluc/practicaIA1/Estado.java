@@ -12,6 +12,8 @@ import java.util.Iterator;
 public class Estado {
     public static Paquetes paquetes;
     public static Transporte transporte;
+    public static double a, b;
+
     private int vecPaquetes[];
     private double vecOfertas[];
     private double coste = 0;
@@ -22,6 +24,10 @@ public class Estado {
     }
     public double getFelicidad() {
         return felicidad;
+    }
+
+    public double getHeuristica() {
+        return a*coste - b*felicidad;
     }
 
     Estado(boolean greedy) {
